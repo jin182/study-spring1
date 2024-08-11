@@ -1,11 +1,13 @@
 package com.example.exception.exception;
 
+import com.example.exception.controller.RestApiBController;
+import com.example.exception.controller.RestApiController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
-@RestControllerAdvice
+@RestControllerAdvice(basePackageClasses = {RestApiController.class, RestApiBController.class})
 public class RestApiExceptionHandler {
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity exception(
