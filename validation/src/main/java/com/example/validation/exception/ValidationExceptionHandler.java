@@ -29,7 +29,7 @@ public class ValidationExceptionHandler {
 
         var error = Api.Error
                 .builder()
-                .errorMessage(errorMessageList)
+                .errormessage(errorMessageList)
                 .build()
                 ;
 
