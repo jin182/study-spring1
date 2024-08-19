@@ -9,19 +9,21 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@AllArgsConstructor
 @ToString
+@Builder
 @Entity(name = "reply")
-class ReplyEntity {
+public class ReplyEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
     @ToString.Exclude
     @JsonIgnore
-    private PostEntity post; // post => _id => post_id
+    private PostEntity post;    // post => _id => post_id
 
     private String userName;
 
@@ -35,4 +37,5 @@ class ReplyEntity {
     private String content;
 
     private LocalDateTime repliedAt;
+
 }
