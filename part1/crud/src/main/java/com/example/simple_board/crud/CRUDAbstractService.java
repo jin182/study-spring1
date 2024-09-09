@@ -5,6 +5,7 @@ import com.example.simple_board.common.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,24 +21,33 @@ public abstract class CRUDAbstractService<DTO, ENTITY> implements CRUDInterface<
 
     @Autowired(required = false)
     private Converter<DTO, ENTITY> converter;
+
     @Override
     public DTO create(DTO dto) {
+
         // dto -> entity
         var entity = converter.toEntity(dto);
+
         // entity -> save
         jpaRepository.save(entity);
+
         // save -> dto
-        return converter.toDTO(entity);
+        var returnDto = converter.toDto(entity);
+
+        return returnDto;
     }
 
     @Override
     public Optional<DTO> read(Long id) {
+
         var optionalEntity = jpaRepository.findById(id);
+
         var dto = optionalEntity.map(
-                it -> {
-                    return converter.toDTO(it);
+                it ->{
+                    return converter.toDto(it);
                 }
-        ).orElseGet(() -> null);
+        ).orElseGet(()->null);
+
         return Optional.ofNullable(dto);
     }
 
@@ -45,8 +55,8 @@ public abstract class CRUDAbstractService<DTO, ENTITY> implements CRUDInterface<
     public DTO update(DTO dto) {
         var entity = converter.toEntity(dto);
         jpaRepository.save(entity);
-        var retunDto = converter.toDTO(entity);
-        return retunDto;
+        var returnDto = converter.toDto(entity);
+        return returnDto;
     }
 
     @Override
@@ -66,16 +76,18 @@ public abstract class CRUDAbstractService<DTO, ENTITY> implements CRUDInterface<
                 .totalPage(list.getTotalPages())
                 .build()
                 ;
+
         var dtoList = list.stream()
-                .map(it -> {
-                    return converter.toDTO(it);
+                .map(it->{
+                    return converter.toDto(it);
                 })
-                .toList();
+                .collect(Collectors.toList());
+
         var response = Api.<List<DTO>>builder()
                 .body(dtoList)
                 .pagination(pagination)
-                .build()
-                ;
+                .build();
+
         return response;
     }
 }
